@@ -30,6 +30,9 @@ public class Character {
             return false;
         }
     }
+    public int getHintRes(int index) {
+        return mHints.get(index);
+    }
 
     public int getNumHints() {
         return mNumHints;
@@ -47,7 +50,7 @@ public class Character {
     public void addTarget(int textResId) {
         mTargets.add(new Integer(textResId));
     }
-
+    public void addTarget(Target t) { mTargets.add(new Integer(t.getTextResId())); }
     public ArrayList<Integer> getTargets() {
         return mTargets;
     }

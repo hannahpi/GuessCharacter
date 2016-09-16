@@ -36,5 +36,10 @@
     <string name="target_iggy_koopa">Iggy Koopa</string>
     <string name="target_king_k_rool">King K. Rool</string>
     <string name="next_button">Next</string>
+    <string name="continue_button">This is my final answer!</string>
     <string name="guess_button">Guess</string>
+    <string name="guess_text">Choose one of the following to guess!</string>
+    <string name="toast_right_guess">You guessed correctly!</string>
+    <string name="toast_incorrect">Sorry, you guessed incorrectly!</string>
+    <string name="toast_error">The toaster is freezing? something about an unknown error!</string>
 </resources>
