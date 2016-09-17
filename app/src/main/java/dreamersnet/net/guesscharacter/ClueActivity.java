@@ -1,5 +1,7 @@
 package dreamersnet.net.guesscharacter;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -16,6 +18,9 @@ public class ClueActivity extends AppCompatActivity {
     private Button mNextButton;
     private int curCharacter=0;
     private int curHint=1;
+    private static final int REQUEST_CODE_CORRECT = 0;
+    private static final String KEY_CHARACTER = "character";
+    private static final String KEY_HINT = "hint";
     Random rand = new Random();
     private Target[] mTargetBank = new Target[] {
             new Target(R.string.target_bowser),
@@ -42,12 +47,48 @@ public class ClueActivity extends AppCompatActivity {
             new Character(R.string.target_luigi),
     };
 
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+        savedInstanceState.putInt(KEY_CHARACTER, curCharacter  );
+        savedInstanceState.putInt(KEY_HINT, curHint);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode != Activity.RESULT_OK)
+            return;
+        if (requestCode == REQUEST_CODE_CORRECT) {
+            if (data == null)
+                return;
+            mNextButton.setText(R.string.next_button_game);
+            mNextButton.setOnClickListener(new View.OnClickListener(){
+                @Override
+                public void onClick(View v) {
+                    curCharacter = rand.nextInt(3);
+                    updateUI();
+                    mNextButton.setText(R.string.next_button);
+                    mNextButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (curHint < mCharacterBank[curCharacter].getNumHints()) {
+                                curHint = curHint +1;
+                            }
+                            updateUI();
+                        }
+                    });
+                }
+            });
+
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_clue);
 
+        curCharacter = rand.nextInt(3);
         mHintsLeftTextView = (TextView) findViewById(R.id.hints_left_text_view);
         mHintTextView = (TextView) findViewById(R.id.hint_text_view);
         mGuessButton = (Button) findViewById(R.id.guess_button);
@@ -66,6 +107,8 @@ public class ClueActivity extends AppCompatActivity {
             public void onClick(View v) {
                 //Start Guess Button
                 //Intent i = Activity.newIntent(ClueActivity.this ??);
+                Intent i = GuessActivity.newIntent(ClueActivity.this,mCharacterBank[curCharacter].toArray());
+                startActivityForResult(i,REQUEST_CODE_CORRECT);
             }
         });
 
@@ -92,7 +135,7 @@ public class ClueActivity extends AppCompatActivity {
         //populate the targets randomly...
         for (int chbank = 0; chbank < mCharacterBank.length; chbank++) {
             for (int t=0; t<3; t++) {
-                mCharacterBank[chbank].addTarget(mTargetBank[rand.nextInt(mTargetBank.length)]);
+                while (!(mCharacterBank[chbank].addTarget(mTargetBank[rand.nextInt(mTargetBank.length-1)])));
             }
         }
         updateUI();

@@ -19,7 +19,7 @@
     <string name="hint_luigi_2">In Mario 2 I jump the highest.</string>
     <string name="hint_luigi_3">I wear green</string>
     <string name="hint_luigi_4">I won a mansion in a contest I never entered!</string>
-    <string name="hint_luigi_5">I saved my brother with a vacuume from King Boo!</string>
+    <string name="hint_luigi_5">I saved my brother with a vacuum from King Boo!</string>
     <string name="target_mario">Mario</string>
     <string name="target_luigi">Luigi</string>
     <string name="target_peach">Peach</string>
@@ -36,6 +36,7 @@
     <string name="target_iggy_koopa">Iggy Koopa</string>
     <string name="target_king_k_rool">King K. Rool</string>
     <string name="next_button">Next</string>
+    <string name="next_button_game">New Game!</string>
     <string name="continue_button">This is my final answer!</string>
     <string name="guess_button">Guess</string>
     <string name="guess_text">Choose one of the following to guess!</string>
