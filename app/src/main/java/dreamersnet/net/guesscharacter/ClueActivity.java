@@ -66,6 +66,7 @@ public class ClueActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     curCharacter = rand.nextInt(3);
+                    curHint = 1;
                     updateUI();
                     mNextButton.setText(R.string.next_button);
                     mNextButton.setOnClickListener(new View.OnClickListener() {
@@ -133,9 +134,12 @@ public class ClueActivity extends AppCompatActivity {
         mCharacterBank[3].addHint(R.string.hint_luigi_4);
         mCharacterBank[3].addHint(R.string.hint_luigi_5);
         //populate the targets randomly...
+        boolean addSuccess=false;
         for (int chbank = 0; chbank < mCharacterBank.length; chbank++) {
             for (int t=0; t<3; t++) {
-                while (!(mCharacterBank[chbank].addTarget(mTargetBank[rand.nextInt(mTargetBank.length-1)])));
+                do {
+                    addSuccess = mCharacterBank[chbank].addTarget(mTargetBank[rand.nextInt(mTargetBank.length-1)]);
+                } while (!addSuccess);
             }
         }
         updateUI();

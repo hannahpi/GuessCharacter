@@ -69,11 +69,12 @@ public class Character {
         mTargets.add(new Integer(textResId));
     }
     public boolean addTarget(Target t) {
-        if (mTargets.contains(t))
+        if (mTargets.contains(t) || t.getTextResId()==0)
             return false;
         mTargets.add(new Integer(t.getTextResId()));
         return true;
     }
+
     public ArrayList<Integer> getTargets() {
         return mTargets;
     }

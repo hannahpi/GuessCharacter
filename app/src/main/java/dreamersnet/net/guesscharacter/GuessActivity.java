@@ -4,10 +4,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 public class GuessActivity extends AppCompatActivity {
     private static final String EXTRA_CHAR_INFO = "net.dreamersnet.guesscharacter.char_info";
@@ -18,7 +21,8 @@ public class GuessActivity extends AppCompatActivity {
     private Button mTarget4Button;
     private int mButtonSelect;
     private Button mContinueButton;
-    private ColorStateList restoreColors;
+    private ColorStateList restoreColorFore;
+    private Drawable restoreColorBack;
     private Character mCharacter;
     private int[] charInfo = new int[4];
 
@@ -45,7 +49,8 @@ public class GuessActivity extends AppCompatActivity {
         mTarget3Button = (Button) findViewById(R.id.target_3_button);
         mTarget4Button = (Button) findViewById(R.id.target_4_button);
         mContinueButton = (Button) findViewById(R.id.continue_button);
-        restoreColors = mTarget1Button.getTextColors();
+        restoreColorFore = mTarget1Button.getTextColors();
+        restoreColorBack = mTarget1Button.getBackground();
 
         mCharacter.shuffleTargets();
         mTarget1Button.setText(mCharacter.getTargetRes(0));
@@ -91,16 +96,28 @@ public class GuessActivity extends AppCompatActivity {
     }
 
     private void setAnswerCorrect(boolean isAnswerCorrect) {
+        int msgToastId;
+        if (isAnswerCorrect)
+        {
+            msgToastId = R.string.toast_right_guess;
+        } else {
+            msgToastId = R.string.toast_incorrect;
+        }
+        Toast.makeText(this, msgToastId,Toast.LENGTH_SHORT).show();
         Intent data = new Intent();
         data.putExtra(EXTRA_ANSWER_CORRECT, isAnswerCorrect);
         setResult(RESULT_OK, data);
     }
 
     private void switchColor(Button b, int textResId) {
-        mTarget1Button.setTextColor(restoreColors);
-        mTarget2Button.setTextColor(restoreColors);
-        mTarget3Button.setTextColor(restoreColors);
-        mTarget4Button.setTextColor(restoreColors);
+        mTarget1Button.setTextColor(restoreColorFore);
+        mTarget2Button.setTextColor(restoreColorFore);
+        mTarget3Button.setTextColor(restoreColorFore);
+        mTarget4Button.setTextColor(restoreColorFore);
+        mTarget1Button.setBackgroundColor(Color.LTGRAY);
+        mTarget2Button.setBackgroundColor(Color.LTGRAY);
+        mTarget3Button.setBackgroundColor(Color.LTGRAY);
+        mTarget4Button.setBackgroundColor(Color.LTGRAY);
         b.setTextColor(Color.BLUE);
         b.setBackgroundColor(Color.WHITE);
         mButtonSelect = textResId;
