@@ -79,6 +79,10 @@ public class Character {
         return true;
     }
 
+    public void shuffleHints() {
+        Collections.shuffle(mHints);
+    }
+
     public ArrayList<Integer> getTargets() {
         return mTargets;
     }

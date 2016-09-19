@@ -70,6 +70,7 @@ public class ClueActivity extends AppCompatActivity {
                 public void onClick(View v) {
                     curCharacter = rand.nextInt(4);
                     curHint = 1;
+                    mCharacterBank[curCharacter].shuffleHints();
                     updateUI();
                     mNextButton.setText(R.string.next_button);
                     mNextButton.setOnClickListener(new View.OnClickListener() {
@@ -152,6 +153,7 @@ public class ClueActivity extends AppCompatActivity {
             mTargetBank.addAll(mUsedTargets);
             mUsedTargets.clear();
         }
+        mCharacterBank[curCharacter].shuffleHints();
         updateUI();
     }
 
