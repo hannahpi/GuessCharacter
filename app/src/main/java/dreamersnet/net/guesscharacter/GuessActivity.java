@@ -8,6 +8,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -15,6 +16,7 @@ import android.widget.Toast;
 public class GuessActivity extends AppCompatActivity {
     private static final String EXTRA_CHAR_INFO = "net.dreamersnet.guesscharacter.char_info";
     private static final String EXTRA_ANSWER_CORRECT = "net.dreamersnet.guesscharacter.answer_correct";
+    private static final String KEY_CHARACTER = "character";
     private Button mTarget1Button;
     private Button mTarget2Button;
     private Button mTarget3Button;
@@ -37,11 +39,23 @@ public class GuessActivity extends AppCompatActivity {
     }
 
     @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+        savedInstanceState.putIntArray(KEY_CHARACTER, charInfo  );
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_guess);
 
         charInfo = getIntent().getIntArrayExtra(EXTRA_CHAR_INFO);
+        for (int i=0; i<charInfo.length; i++) {
+            if (charInfo[i] == 0) {
+                Log.d("CharacterCorruptionExt", "information is corrupted when getting back int array" + i + "," + charInfo[i]);
+            }
+
+        }
         mCharacter = new Character(charInfo);
 
         mTarget1Button = (Button) findViewById(R.id.target_1_button);

@@ -1,5 +1,7 @@
 package dreamersnet.net.guesscharacter;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
@@ -28,6 +30,8 @@ public class Character {
         mHints = new ArrayList<Integer>();
         for (int i=0; i< charInfo.length; i++)
         {
+            if (charInfo[i] == 0)
+                Log.d("Character Information", "An error occurred with character " + i + "," + charInfo[i] + " this:" + mTextResId);
             mTargets.add(charInfo[i]);
         }
     }
@@ -78,15 +82,16 @@ public class Character {
     public ArrayList<Integer> getTargets() {
         return mTargets;
     }
+
     public int[] toArray() {
         int[] tmp = new int[4];
         int ct = 1;
-        tmp[0] = mTextResId;
         for (int i=0; i<4; i++) {
             int curInt = mTargets.get(i);
-            if (curInt != mTextResId) {
-                tmp[ct++] = mTargets.get(i);
+            if (curInt==0) {
+                Log.d("Character Information", "An error occurred with character " + i + "," + tmp[i] + " this:" + mTextResId);
             }
+            tmp[i]=curInt;
         }
         return tmp;
     }

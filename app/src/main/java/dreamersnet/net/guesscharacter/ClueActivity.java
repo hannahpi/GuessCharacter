@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Random;
 
 public class ClueActivity extends AppCompatActivity {
@@ -22,8 +23,10 @@ public class ClueActivity extends AppCompatActivity {
     private static final String KEY_CHARACTER = "character";
     private static final String KEY_HINT = "hint";
     Random rand = new Random();
-    private Target[] mTargetBank = new Target[] {
-            new Target(R.string.target_bowser),
+    private ArrayList<Target> mUsedTargets = new ArrayList<Target>();
+
+
+    private ArrayList<Target> mTargetBank = new ArrayList<Target>(Arrays.asList(
             new Target(R.string.target_daisy),
             new Target(R.string.target_iggy_koopa),
             new Target(R.string.target_king_boo),
@@ -37,8 +40,8 @@ public class ClueActivity extends AppCompatActivity {
             new Target(R.string.target_toad),
             new Target(R.string.target_waluigi),
             new Target(R.string.target_wario),
-            new Target(R.string.target_zelda),
-    };
+            new Target(R.string.target_zelda)
+    ));
 
     private Character[] mCharacterBank = new Character[] {
             new Character(R.string.target_daisy ),
@@ -65,7 +68,7 @@ public class ClueActivity extends AppCompatActivity {
             mNextButton.setOnClickListener(new View.OnClickListener(){
                 @Override
                 public void onClick(View v) {
-                    curCharacter = rand.nextInt(3);
+                    curCharacter = rand.nextInt(4);
                     curHint = 1;
                     updateUI();
                     mNextButton.setText(R.string.next_button);
@@ -89,7 +92,7 @@ public class ClueActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_clue);
 
-        curCharacter = rand.nextInt(3);
+        curCharacter = rand.nextInt(4);
         mHintsLeftTextView = (TextView) findViewById(R.id.hints_left_text_view);
         mHintTextView = (TextView) findViewById(R.id.hint_text_view);
         mGuessButton = (Button) findViewById(R.id.guess_button);
@@ -107,8 +110,9 @@ public class ClueActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //Start Guess Button
-                //Intent i = Activity.newIntent(ClueActivity.this ??);
-                Intent i = GuessActivity.newIntent(ClueActivity.this,mCharacterBank[curCharacter].toArray());
+
+                int[] cInfo = mCharacterBank[curCharacter].toArray();
+                Intent i = GuessActivity.newIntent(ClueActivity.this,cInfo);
                 startActivityForResult(i,REQUEST_CODE_CORRECT);
             }
         });
@@ -134,13 +138,19 @@ public class ClueActivity extends AppCompatActivity {
         mCharacterBank[3].addHint(R.string.hint_luigi_4);
         mCharacterBank[3].addHint(R.string.hint_luigi_5);
         //populate the targets randomly...
-        boolean addSuccess=false;
+        Target curTarg;
         for (int chbank = 0; chbank < mCharacterBank.length; chbank++) {
+            curTarg = new Target(mCharacterBank[chbank].getTextResId());
+            mUsedTargets.add(curTarg);
+            mTargetBank.remove(curTarg);
             for (int t=0; t<3; t++) {
-                do {
-                    addSuccess = mCharacterBank[chbank].addTarget(mTargetBank[rand.nextInt(mTargetBank.length-1)]);
-                } while (!addSuccess);
+                curTarg = mTargetBank.get(rand.nextInt(mTargetBank.size()-1));
+                mCharacterBank[chbank].addTarget(curTarg);
+                mTargetBank.remove(curTarg);
+                mUsedTargets.add(curTarg);
             }
+            mTargetBank.addAll(mUsedTargets);
+            mUsedTargets.clear();
         }
         updateUI();
     }
