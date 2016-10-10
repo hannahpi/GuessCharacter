@@ -47,9 +47,14 @@ public class GuessActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (savedInstanceState != null) {
+            charInfo = savedInstanceState.getIntArray(KEY_CHARACTER);
+        } else {
+            charInfo = getIntent().getIntArrayExtra(EXTRA_CHAR_INFO);
+        }
         setContentView(R.layout.activity_guess);
 
-        charInfo = getIntent().getIntArrayExtra(EXTRA_CHAR_INFO);
+
         for (int i=0; i<charInfo.length; i++) {
             if (charInfo[i] == 0) {
                 Log.d("CharacterCorruptionExt", "information is corrupted when getting back int array" + i + "," + charInfo[i]);

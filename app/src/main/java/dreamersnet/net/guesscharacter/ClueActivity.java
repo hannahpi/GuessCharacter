@@ -22,6 +22,7 @@ public class ClueActivity extends AppCompatActivity {
     private static final int REQUEST_CODE_CORRECT = 0;
     private static final String KEY_CHARACTER = "character";
     private static final String KEY_HINT = "hint";
+    private static final String KEY_NUM_HINTS = "numhints";
     Random rand = new Random();
     private ArrayList<Target> mUsedTargets = new ArrayList<Target>();
 
@@ -55,6 +56,7 @@ public class ClueActivity extends AppCompatActivity {
         super.onSaveInstanceState(savedInstanceState);
         savedInstanceState.putInt(KEY_CHARACTER, curCharacter  );
         savedInstanceState.putInt(KEY_HINT, curHint);
+        savedInstanceState.putInt(KEY_NUM_HINTS, mCharacterBank[curCharacter].getNumHints());
     }
 
     @Override
@@ -93,31 +95,6 @@ public class ClueActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_clue);
 
-        curCharacter = rand.nextInt(4);
-        mHintsLeftTextView = (TextView) findViewById(R.id.hints_left_text_view);
-        mHintTextView = (TextView) findViewById(R.id.hint_text_view);
-        mGuessButton = (Button) findViewById(R.id.guess_button);
-        mNextButton = (Button) findViewById(R.id.next_button);
-        mNextButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (curHint < mCharacterBank[curCharacter].getNumHints()) {
-                    curHint = curHint +1;
-                }
-                updateUI();
-            }
-        });
-        mGuessButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //Start Guess Button
-
-                int[] cInfo = mCharacterBank[curCharacter].toArray();
-                Intent i = GuessActivity.newIntent(ClueActivity.this,cInfo);
-                startActivityForResult(i,REQUEST_CODE_CORRECT);
-            }
-        });
-
         mCharacterBank[0].addHint(R.string.hint_daisy_1);
         mCharacterBank[0].addHint(R.string.hint_daisy_2);
         mCharacterBank[0].addHint(R.string.hint_daisy_3);
@@ -138,7 +115,6 @@ public class ClueActivity extends AppCompatActivity {
         mCharacterBank[3].addHint(R.string.hint_luigi_3);
         mCharacterBank[3].addHint(R.string.hint_luigi_4);
         mCharacterBank[3].addHint(R.string.hint_luigi_5);
-        //populate the targets randomly...
         Target curTarg;
         for (int chbank = 0; chbank < mCharacterBank.length; chbank++) {
             curTarg = new Target(mCharacterBank[chbank].getTextResId());
@@ -153,7 +129,41 @@ public class ClueActivity extends AppCompatActivity {
             mTargetBank.addAll(mUsedTargets);
             mUsedTargets.clear();
         }
-        mCharacterBank[curCharacter].shuffleHints();
+
+        if (savedInstanceState!=null) {
+            curCharacter = savedInstanceState.getInt(KEY_CHARACTER);
+            curHint = savedInstanceState.getInt(KEY_HINT);
+            mCharacterBank[curCharacter].setNumHints(savedInstanceState.getInt(KEY_NUM_HINTS));
+        } else {
+            curCharacter = rand.nextInt(4);
+            //populate the targets randomly...
+
+            mCharacterBank[curCharacter].shuffleHints();
+        }
+
+
+        mHintsLeftTextView = (TextView) findViewById(R.id.hints_left_text_view);
+        mHintTextView = (TextView) findViewById(R.id.hint_text_view);
+        mGuessButton = (Button) findViewById(R.id.guess_button);
+        mNextButton = (Button) findViewById(R.id.next_button);
+        mNextButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (curHint < mCharacterBank[curCharacter].getNumHints()) {
+                    curHint = curHint +1;
+                }
+                updateUI();
+            }
+        });
+        mGuessButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int[] cInfo = mCharacterBank[curCharacter].toArray();
+                Intent i = GuessActivity.newIntent(ClueActivity.this,cInfo);
+                startActivityForResult(i,REQUEST_CODE_CORRECT);
+            }
+        });
+
         updateUI();
     }
 

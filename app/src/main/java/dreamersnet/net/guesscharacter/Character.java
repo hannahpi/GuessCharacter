@@ -45,6 +45,8 @@ public class Character {
         }
     }
 
+    public void setNumHints(int numHints) { mNumHints = numHints; }
+
     public int getHintRes(int index) {
         return mHints.get(index);
     }
